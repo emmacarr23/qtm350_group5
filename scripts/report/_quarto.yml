@@ -3,7 +3,6 @@ project:
   output-dir: ../../docs
 
 website:
-  title: "Regression Analysis of Regional Indicators"
   navbar:
     left:
       - text: "Home"
