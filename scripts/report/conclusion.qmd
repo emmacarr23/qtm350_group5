@@ -1,6 +1,10 @@
 ---
-title: "Conclusion"
+title: Conclusion
+output:
+    pdf: 
+        template: article-template.latex
 ---
+
 Based on our analysis, it is clear there are key differences in the factors that drive GDP per capita across higher- and lower-performing regions. In higher-performing regions, employment and tax review demonstrated a strong, positve association on GDP per capita. Adjusted income growth, contrarily, had a negative impact on GDP per capita. All three indicators were statistically significant in predicting GDP per capita in this group, suggesting they collectively contribute to these North America's and Europe & Central Asia's economic standing. 
 
 For lower-performing regions, tax revenue was the only indicator that was significant in predicting GDP growth, while adjusted income growth and employment ratio demonstrated weaker and statistically insignificant assionations. 

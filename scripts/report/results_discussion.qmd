@@ -1,6 +1,10 @@
 ---
-title: "Results and Discussion"
+title: Results and Discussion
+output:
+    pdf: 
+        template: article-template.latex
 ---
+
 We examined the association between seelected economic indicators and GDP per capita, stratified by region (@fig-associations). In higher performing regions (North America and Europe & Central Asia), the strongest association was seen across GDP and emoployment ratio. On the contrary, association was weakest when comparing ajusted income growth, with little variation in the growth rate across varying levels of GDP. 
 
 Examining the lowest performing regions (Sub-Saharan Africa and South Asia), the strongest association was seen between tax revenue and GDP per capita. Both adjusted income growth and employment had weaker associations, with wide variability across points. 
