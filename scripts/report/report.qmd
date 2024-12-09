@@ -1,7 +1,19 @@
 ---
-title: "report"
+title: report
+author: Emma Carrier (2624605), Enoc De Jesus (2546986), Miracle Ephraim (2492732), Neil Das (2487236)
+output:
+    pdf: 
+        template: article-template.latex
 ---
 
-## Quarto
+## Introduction
+blah blah blah something about the data idk
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+## Data Description
+
+## Data Anaylsis
+
+## Results and Dicussion
+
+## Conclusion
+
