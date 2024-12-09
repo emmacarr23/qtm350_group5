@@ -147,3 +147,43 @@ bottom_model = fit_regression(bottom_regions, "Bottom")
 
 ## Interpretation
 For bottom regions, only tax revenue significantly predicts GDP per capita, with a positive effect. The model explains 33.6% of the variation, as other variables (adjusted income growth and employment ratio) were excluded due to insignificance (p > 0.05).
+
+
+## Choosing Top & Bottom Regions
+
+```{python}
+indicators = [
+    "GDP per capita (constant 2015 US$)",
+    'Adjusted net national income per capita (annual % growth)',
+    "Employment to population ratio, 15+, total (%) (national estimate)",
+    'Tax revenue (% of GDP)'
+]
+filtered_data = data[data['series_name'].isin(indicators)]
+
+long_data = filtered_data.melt(
+    id_vars=["country_name", "country_code", "series_name", "region"],
+    var_name="year",
+    value_name="value")
+
+long_data['year'] = long_data['year'].str.extract('(\d+)').astype(int)
+
+# Calculate regional means for the latest available year
+latest_year = long_data['year'].max() - 1
+regional_means = (
+    long_data[long_data['year'] == latest_year]
+    .groupby(['region', 'series_name'])['value']
+    .mean()
+    .unstack()
+)
+
+# Plot Regional GDP Per Capita for the Latest Year
+plt.figure(figsize=(10, 6))
+regional_means['GDP per capita (constant 2015 US$)'].sort_values().plot(kind='barh')
+plt.title(f'Regional GDP per Capita ({latest_year})')
+plt.xlabel('GDP per Capita (constant 2015 US$)')
+plt.ylabel('Region')
+plt.tight_layout()
+plt.savefig('regional_gdp_per_capita.png')
+plt.show()
+
+```
