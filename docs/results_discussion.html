@@ -143,24 +143,88 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>We examined the association between seelected economic indicators and GDP per capita, stratified by region (<a href="#fig-associations" class="quarto-xref">Figure&nbsp;1</a>). In higher performing regions (North America and Europe &amp; Central Asia), the strongest association was seen across GDP and emoployment ratio. On the contrary, association was weakest when comparing ajusted income growth, with little variation in the growth rate across varying levels of GDP.</p>
+<p>We examined the association between seelected economic indicators and GDP per capita, stratified by region (<strong>?@fig-associations</strong>). In higher performing regions (North America and Europe &amp; Central Asia), the strongest association was seen across GDP and emoployment ratio. On the contrary, association was weakest when comparing ajusted income growth, with little variation in the growth rate across varying levels of GDP.</p>
 <p>Examining the lowest performing regions (Sub-Saharan Africa and South Asia), the strongest association was seen between tax revenue and GDP per capita. Both adjusted income growth and employment had weaker associations, with wide variability across points.</p>
-<div id="fig-associations" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-associations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="scripts/report/predictors_vs_gdp_with_regression_lines.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-associations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Figure 1. Association between economic indicators and GDP per capita, stratified by regional performance
-</figcaption>
+<div id="7fa608e7" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="results_discussion_files/figure-html/cell-2-output-1.png" width="1429" height="1140" class="figure-img"></p>
 </figure>
+</div>
+</div>
 </div>
 <p>To further quantify these relationships, we conducted a linear regression analysis using the following model:</p>
 <p>GDP_per_capita = adjusted income growth + employment ratio + tax revenue</p>
 <p>In the higher performing regions, income growth had a negative impact, with an increase in adjusted income growth was associated with a $814.83 decrease in GDP per capita. Employment ratio and tax revenue had a positive association, with a one unit increase leading to a $1160.32 and $859.32 increase in GDP per capita, respecitvely. All indicators were significant, with p-values less than 0.01 (<strong>?@fig-regression_high</strong>).</p>
 <p>Examining the lower performing regions, our model focused on just the impact of tax revenue, as income growth and employment ratio were insignificant predictors at significance level = 0.05. Tax revenue demonstrated a positive impact on GDP per capita, with a one unit increase leading to $323.41 increase in GDP per capita. Tax revenue was the only significant indicator for these regions at significance level = 0.05, further highlighting the weaker associations observed amongst employment and income growth in the graphs(<strong>?@fig-regression_low</strong>).</p>
 <p>Interestly enough, the model for lower-performing regions better explained the variability seen in GDP when compared to the higher-performing region, as seen by the higher adjusted R-squared of 0.33 (compared to that of higher regions = 0.214).</p>
-<p><img src="figures/high_regression.jpeg" id="fig-regression_high" class="img-fluid" alt="Figure 2. Linear regression output of higher-performing regions"> <img src="figures/low_regression.jpeg" id="fig-regression_low" class="img-fluid" alt="Figure 3. Linear regression output of lower-performing regions"></p>
+<div id="8f572187" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Final Regression Summary for Top Regions
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:         GDP_per_capita   R-squared:                       0.217
+Model:                            OLS   Adj. R-squared:                  0.214
+Method:                 Least Squares   F-statistic:                     66.84
+Date:                Mon, 09 Dec 2024   Prob (F-statistic):           3.73e-38
+Time:                        18:43:27   Log-Likelihood:                -8283.3
+No. Observations:                 727   AIC:                         1.657e+04
+Df Residuals:                     723   BIC:                         1.659e+04
+Df Model:                           3                                         
+Covariance Type:            nonrobust                                         
+==========================================================================================
+                             coef    std err          t      P&gt;|t|      [0.025      0.975]
+------------------------------------------------------------------------------------------
+const                  -5.034e+04   6287.608     -8.007      0.000   -6.27e+04    -3.8e+04
+Adjusted_income_growth  -814.8262    149.074     -5.466      0.000   -1107.496    -522.157
+Employment_ratio        1160.3191     98.361     11.797      0.000     967.212    1353.426
+Tax_revenue              859.3198    142.932      6.012      0.000     578.709    1139.931
+==============================================================================
+Omnibus:                      148.725   Durbin-Watson:                   0.229
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              324.616
+Skew:                           1.113   Prob(JB):                     3.24e-71
+Kurtosis:                       5.400   Cond. No.                         465.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
+</div>
+</div>
+<div id="de9fa3f0" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-stdout">
+<pre><code>Dropping variable 'Adjusted_income_growth' with p-value 0.5781723503520071
+Dropping variable 'Employment_ratio' with p-value 0.43572331591362223
+
+Final Regression Summary for Bottom Regions
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:         GDP_per_capita   R-squared:                       0.336
+Model:                            OLS   Adj. R-squared:                  0.332
+Method:                 Least Squares   F-statistic:                     89.43
+Date:                Mon, 09 Dec 2024   Prob (F-statistic):           1.96e-17
+Time:                        18:43:27   Log-Likelihood:                -1695.3
+No. Observations:                 179   AIC:                             3395.
+Df Residuals:                     177   BIC:                             3401.
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+===============================================================================
+                  coef    std err          t      P&gt;|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+const       -1699.4931    611.437     -2.780      0.006   -2906.137    -492.849
+Tax_revenue   323.4066     34.199      9.457      0.000     255.916     390.897
+==============================================================================
+Omnibus:                       48.330   Durbin-Watson:                   0.330
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):              118.055
+Skew:                           1.160   Prob(JB):                     2.32e-26
+Kurtosis:                       6.232   Cond. No.                         46.4
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
+</div>
+</div>
 
 
 

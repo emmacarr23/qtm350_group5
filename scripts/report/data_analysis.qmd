@@ -50,7 +50,6 @@ plt.show()
 ## Data Analysis & Visualizations
 ```{python}
 #| echo: false
-#| eval: false
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
@@ -64,8 +63,6 @@ income_melt['year'] = income_melt['year'].str.replace('avg_', '').astype(int)
 income_year_avg = income_melt.groupby(['year', 'region'])['value'].mean().reset_index()
 income_top2 = income_year_avg[income_year_avg['region'].isin(['Europe & Central Asia', 'North America'])]
 income_bot2 = income_year_avg[income_year_avg['region'].isin(['Sub-Saharan Africa', 'South Asia'])]
-display(income_top2)
-display(income_bot2)
 
 # tax revenue data
 tax_rev = regional_avg[regional_avg['series_name'].str.contains('Tax')]
@@ -74,8 +71,6 @@ tax_melt['year'] = tax_melt['year'].str.replace('avg_', '').astype(int)
 tax_rev_avg = tax_melt.groupby(['year', 'region'])['value'].mean().reset_index()
 tax_top2 = tax_rev_avg[tax_rev_avg['region'].isin(['Europe & Central Asia', 'North America'])]
 tax_bot2 = tax_rev_avg[tax_rev_avg['region'].isin(['Sub-Saharan Africa', 'South Asia'])]
-display(tax_top2)
-display(tax_bot2)
 
 #employment data
 employment = regional_avg[regional_avg['series_name'].str.contains('Employment')]
@@ -84,8 +79,6 @@ em_melt['year'] = em_melt['year'].str.replace('avg_', '').astype(int)
 employment_avg = em_melt.groupby(['year', 'region'])['value'].mean().reset_index()
 employment_top2 = employment_avg[employment_avg['region'].isin(['Europe & Central Asia', 'North America'])]
 employment_bot2 = employment_avg[employment_avg['region'].isin(['Sub-Saharan Africa', 'South Asia'])]
-display(employment_top2)
-display(employment_bot2)
 ```
 
 # Adjusted Net National Income per Capita (annual % growth) from 2004-2023
