@@ -1,7 +1,26 @@
 project:
-  title: "report"
+  type: website
+  output-dir: ../../docs
+
+website:
+  title: "Regression Analysis of Regional Indicators"
+  navbar:
+    left:
+      - text: "Home"
+        href: title.qmd
+      - text: "Introduction"
+        href: introduction.qmd
+      - text: "Data Description"
+        href: data_description.qmd
+      - text: "Data Analysis"
+        href: data_analysis.qmd
+      - text: "Discussion of Results"
+        href: results_discussion.qmd
+      - text: "Conclusion"
+        href: conclusion.qmd
+
 format:
-  pdf:
-    template: article-template.latex
-
-
+  html:
+    theme: flatly
+    css: styles.css
+    toc: true
