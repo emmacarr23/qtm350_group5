@@ -3,7 +3,7 @@ project:
   output-dir: ../../docs
 
 website:
-  title: "Gapminder Data Analysis"
+  title: "Regression Analysis of Regional Indicators"
   navbar:
     left:
       - text: "Home"
@@ -18,7 +18,7 @@ website:
         href: results_discussion.qmd
       - text: "Conclusion"
         href: conclusion.qmd
-        
+
 format:
   html:
     theme: flatly
