@@ -9,9 +9,10 @@ This project explores regional differences in economic indicators using data fro
 
 ## Repository Contents
 - data folder: contains all datasets created and used
-- documentation folder: contains the codebook
+- documentation folder: contains the codebook and entity_relationship_diagram
 - figures folder: contains png files of all outputs from the data exploration and analysis
 - scripts folder: contains all the files needed for the quarto report
+- docs folder: contains the rendered html files of the report
 - requirements.txt file: contains versions of all packages needed to run the code
 - README.md file: project description, contents and instructions (this file)
 
