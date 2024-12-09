@@ -9,6 +9,6 @@ It is well-known that there is wide discrepancy in the economic standing of the 
 
 In our research, we aim to identify the economic indicators that play the most significant roles in explaining variation seen in global regions' economic standings, which we detemined by comparing each region's GDP per capita. Specifically, we will be examining the highest-performing regions, North America and Europe & Central Asia, and the lowest-performing regions, Sub-Saharan Africa and South Asia. We determined regional rankings through preliminary analysis (@fig-global_gdp_comparisons). By examining these highly contrasting cases, we hope to pinpoint the most influential drivers of GDP per capita within and across these groups, regional economic disparity.
 
-![Figure 1. Regional GDP per capita](scripts/report/regional_gdp_per_capita.png){#fig-global_gdp_comparisons}
+![Figure 1. Regional GDP per capita](report/regional_gdp_per_capita.png){#fig-global_gdp_comparisons}
 
 Our analysis examines the relationships between GDP per capita and three core indicators: adjusted income growth, employment to GDP ratio, and tax revenue to GDP ratio. Using linear regression models, we identify the magnitude and direction of these associations, as well as determine each indicator's signficance in predicting each region's GDP per capita. 
