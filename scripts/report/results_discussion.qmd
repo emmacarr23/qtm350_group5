@@ -1,15 +1,101 @@
 ---
 title: Results and Discussion
 output:
-    pdf: 
-        template: article-template.latex
+    pdf: default
 ---
 
 We examined the association between seelected economic indicators and GDP per capita, stratified by region (@fig-associations). In higher performing regions (North America and Europe & Central Asia), the strongest association was seen across GDP and emoployment ratio. On the contrary, association was weakest when comparing ajusted income growth, with little variation in the growth rate across varying levels of GDP. 
 
 Examining the lowest performing regions (Sub-Saharan Africa and South Asia), the strongest association was seen between tax revenue and GDP per capita. Both adjusted income growth and employment had weaker associations, with wide variability across points. 
 
-![Figure 1. Association between economic indicators and GDP per capita, stratified by regional performance](scripts/report/predictors_vs_gdp_with_regression_lines.png){#fig-associations}
+```{python}
+#| echo: false
+# Import necessary libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+
+# Load the datasets
+data = pd.read_csv('../../data/cleaned_data.csv')
+
+# Choosing relevant indicators and filtering data
+indicators = [
+    "GDP per capita (constant 2015 US$)",
+    "Adjusted net national income per capita (annual % growth)",
+    "Employment to population ratio, 15+, total (%) (national estimate)",
+    "Tax revenue (% of GDP)"
+]
+regions_of_interest = ['North America', 'Europe & Central Asia', 'South Asia', 'Sub-Saharan Africa']
+
+# Filter the data for selected indicators and regions
+filtered_data = data[
+    (data['series_name'].isin(indicators)) & 
+    (data['region'].isin(regions_of_interest))
+]
+
+# Reshape the dataset to long format
+long_data = filtered_data.melt(
+    id_vars=["country_name", "country_code", "series_name", "region"],
+    var_name="year",
+    value_name="value"
+)
+long_data['year'] = long_data['year'].str.extract('(\d+)').astype(int)
+
+# Pivot to wide format to get all indicators as columns
+wide_data = long_data.pivot_table(
+    index=["country_name", "region", "year"], 
+    columns="series_name", 
+    values="value"
+).reset_index()
+
+wide_data.columns = [
+    "country_name", "region", "year", 
+    "Adjusted_income_growth", "Employment_ratio", 
+    "GDP_per_capita", "Tax_revenue"
+]
+
+# Filter for rows with complete data
+wide_data = wide_data.dropna()
+
+# Separate top and bottom regions
+top_regions = wide_data[wide_data['region'].isin(['North America', 'Europe & Central Asia'])]
+bottom_regions = wide_data[wide_data['region'].isin(['South Asia', 'Sub-Saharan Africa'])]
+
+# Visualize relationships with regression lines
+fig, axes = plt.subplots(3, 2, figsize=(15, 12))
+predictors = ["Adjusted_income_growth", "Employment_ratio", "Tax_revenue"]
+titles = ["Adjusted Income Growth", "Employment Ratio", "Tax Revenue"]
+
+for i, predictor in enumerate(predictors):
+    # Top regions
+    axes[i, 0].scatter(top_regions[predictor], top_regions["GDP_per_capita"], alpha=0.7, label='Data Points')
+    # Fit regression line for top regions
+    X_top = sm.add_constant(top_regions[predictor])  # Add constant for regression
+    model_top = sm.OLS(top_regions["GDP_per_capita"], X_top).fit()
+    regression_line_top = model_top.predict(X_top)
+    axes[i, 0].plot(top_regions[predictor], regression_line_top, color='red', label='Regression Line')
+    axes[i, 0].set_title(f"Top Regions: {titles[i]} vs. GDP per Capita")
+    axes[i, 0].set_xlabel(titles[i])
+    axes[i, 0].set_ylabel("GDP per Capita")
+    axes[i, 0].legend()
+    
+    # Bottom regions
+    axes[i, 1].scatter(bottom_regions[predictor], bottom_regions["GDP_per_capita"], alpha=0.7, label='Data Points')
+    # Fit regression line for bottom regions
+    X_bottom = sm.add_constant(bottom_regions[predictor])  # Add constant for regression
+    model_bottom = sm.OLS(bottom_regions["GDP_per_capita"], X_bottom).fit()
+    regression_line_bottom = model_bottom.predict(X_bottom)
+    axes[i, 1].plot(bottom_regions[predictor], regression_line_bottom, color='red', label='Regression Line')
+    axes[i, 1].set_title(f"Bottom Regions: {titles[i]} vs. GDP per Capita")
+    axes[i, 1].set_xlabel(titles[i])
+    axes[i, 1].set_ylabel("GDP per Capita")
+    axes[i, 1].legend()
+
+plt.tight_layout()
+plt.savefig("predictors_vs_gdp_with_regression_lines.png")
+plt.show()
+```
 
 To further quantify these relationships, we conducted a linear regression analysis using the following model: 
 
@@ -21,5 +107,41 @@ Examining the lower performing regions, our model focused on just the impact of 
 
 Interestly enough, the model for lower-performing regions better explained the variability seen in GDP when compared to the higher-performing region, as seen by the higher adjusted R-squared of 0.33 (compared to that of higher regions = 0.214). 
 
-![Figure 2. Linear regression output of higher-performing regions](figures/high_regression.jpeg){#fig-regression_high}
-![Figure 3. Linear regression output of lower-performing regions](figures/low_regression.jpeg){#fig-regression_low}
+```{python}
+#| echo: false
+def fit_regression(data, region_group):
+    # Define the initial set of predictors
+    predictors = ["Adjusted_income_growth", "Employment_ratio", "Tax_revenue"]
+    y = data["GDP_per_capita"]
+    
+    # Iteratively fit the model and drop insignificant variables
+    while True:
+        X = data[predictors]
+        X = sm.add_constant(X)  # Add a constant for the intercept
+        model = sm.OLS(y, X).fit()
+        
+        # Get p-values and check for the highest p-value
+        p_values = model.pvalues.drop("const")  # Exclude the constant
+        max_p_value = p_values.max()
+        max_p_variable = p_values.idxmax()
+        
+        # If all p-values are <= 0.05, stop dropping variables
+        if max_p_value <= 0.05:
+            break
+        
+        # Drop the variable with the highest p-value
+        print(f"Dropping variable '{max_p_variable}' with p-value {max_p_value}")
+        predictors.remove(max_p_variable)
+    
+    # Final model summary
+    print(f"\nFinal Regression Summary for {region_group} Regions")
+    print(model.summary())
+    return model
+
+top_model = fit_regression(top_regions, "Top")
+```
+
+```{python}
+#| echo: false
+bottom_model = fit_regression(bottom_regions, "Bottom")
+```
