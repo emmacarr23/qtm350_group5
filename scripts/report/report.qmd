@@ -11,6 +11,8 @@ It is well-known that there is wide discrepancy in the economic standing of the 
 
 In our research, we aim to identify the economic indicators that play the most significant roles in explaining variation seen in global regions' economic standings. Specifically, we will be examining the highest-performing regions, North America and Europe, and the lowest-performing regions, Sub-Saharan Africa and North Asia. By examining these highly contrasting cases, we hope to pinpoint the key drivers of regional economic disparity.
 
+The group of indicators we chose to examine includes adjusted income growth, employment to GDP ratio, and tax revenue to GDP ratio. These indicators provided the most comprehensive dataset for our regions, with few missing observations. 
+
 Major findings
 
 ## Data Description
@@ -19,5 +21,18 @@ Major findings
 
 ## Results and Dicussion
 
-## Conclusion
+We examined the association between seelected economic indicators and GDP per capita, stratified by region. In higher performing regions (North America and Europe), the strongest association was seen across GDP and emoployment ratio. On the contrary, association was weakest when comparing ajusted income growth, with little variation in the growth rate across varying levels of GDP. 
 
+Examining the lowest performing regions (Sub-Saharan Africa and North Asia), the strongest association was seen between tax revenue and GDP per capita. Both adjusted income growth and employment had weaker associations, with wide variability across points. 
+
+To further quantify these relationships, we conducted a linear regression analysis using the following model: 
+
+GDP_per_capita = adjusted income growth + employment ratio + tax revenue
+
+In the higher performing regions, income growth had a negative impact, with an increase in adjusted income growth was associated with a $814.83 decrease in GDP per capita. Employment ratio and tax revenue had a positive association, with a one unit increase leading to a 1160.32 and 859.32 increase in GDP per capita, respecitvely. All indicators were significant, with p-values less than 0.01. 
+
+Examining the lower performing regions, tax revenue demonstrated a positive impact on GDP, with a one unit increase leading to $323.41 increase in GDP per capita. Tax revenue was the only significant indicator for these regions at significance level = 0.05, further highlight the weaker associations observed amongst employment and income growth in the graphs. 
+
+Interestly enough, the model for lower-performing regions better explained the variability seen in GDP when compared to the higher-performing region, as seen by the higher adjusted R-squared of 0.33 (compared to that of higher regions = 0.214). 
+
+## Conclusion
