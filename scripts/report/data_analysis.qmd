@@ -121,6 +121,7 @@ for ax in axes:
 
 plt.tight_layout()
 plt.show()
+plt.savefig('../../figures/nat_income.png', format='png')
 ```
 
 # Interpretation
@@ -161,6 +162,7 @@ for ax in axes:
 
 plt.tight_layout()
 plt.show()
+plt.savefig('../../figures/tax_rev.png', format='png')
 ```
 
 # Interpretation
@@ -201,6 +203,7 @@ for ax in axes:
 
 plt.tight_layout()
 plt.show()
+plt.savefig('../../figures/employment.png', format='png')
 ```
 
 # Interpretation
