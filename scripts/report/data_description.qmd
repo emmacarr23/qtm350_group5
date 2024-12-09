@@ -15,4 +15,4 @@ The specific variables we examined were as follows:
 * Employment to population ratio, 15+, total (%) (national estimate): Proportion of a country's population that is employed, where employment is defined as persons of working age who, during a short reference period, were engaged in any activity to produce goods or provide services for pay or profit 
 * Tax revenue (% of GDP): total compulsory transfers to the central government for public purposes
 
-We chose these indicators specifically as they provided the most comprehensive dataset, with limited missingness given the availability of observations from the World Bank. 
+We chose these indicators specifically as they provided the most comprehensive dataset, with limited missingness given the availability of observations from the World Bank.

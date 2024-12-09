@@ -1,12 +1,207 @@
 ---
-title: "Regression Analysis of Indicators"
+title: "Analysis of Indicators"
 ---
-
-## Introduction
 
 This analysis investigates regional differences across various indicators using cleaned datasets. The goal is to uncover trends and disparities to inform data-driven conclusions.
 
-## Data Analysis
+## Choosing Top & Bottom Regions
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+#| echo: false
+data = pd.read_csv('../../data/cleaned_data.csv')
+indicators = [
+    "GDP per capita (constant 2015 US$)",
+    'Adjusted net national income per capita (annual % growth)',
+    "Employment to population ratio, 15+, total (%) (national estimate)",
+    'Tax revenue (% of GDP)'
+]
+filtered_data = data[data['series_name'].isin(indicators)]
+
+long_data = filtered_data.melt(
+    id_vars=["country_name", "country_code", "series_name", "region"],
+    var_name="year",
+    value_name="value")
+
+long_data['year'] = long_data['year'].str.extract('(\d+)').astype(int)
+
+# Calculate regional means for the latest available year
+latest_year = long_data['year'].max() - 1
+regional_means = (
+    long_data[long_data['year'] == latest_year]
+    .groupby(['region', 'series_name'])['value']
+    .mean()
+    .unstack()
+)
+
+# Plot Regional GDP Per Capita for the Latest Year
+plt.figure(figsize=(10, 6))
+regional_means['GDP per capita (constant 2015 US$)'].sort_values().plot(kind='barh')
+plt.title(f'Regional GDP per Capita ({latest_year})')
+plt.xlabel('GDP per Capita (constant 2015 US$)')
+plt.ylabel('Region')
+plt.tight_layout()
+plt.savefig('regional_gdp_per_capita.png')
+plt.show()
+
+```
+
+## Data Analysis & Visualizations
+```{python}
+#| echo: false
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+
+regional_avg = pd.read_csv('../../data/regional_avg.csv')
+
+# national income data
+nat_income = regional_avg[regional_avg['series_name'].str.contains('Adjusted net')]
+income_melt = nat_income.melt(id_vars=['region', 'series_name'], var_name='year', value_name='value')
+income_melt['year'] = income_melt['year'].str.replace('avg_', '').astype(int)
+income_year_avg = income_melt.groupby(['year', 'region'])['value'].mean().reset_index()
+income_top2 = income_year_avg[income_year_avg['region'].isin(['Europe & Central Asia', 'North America'])]
+income_bot2 = income_year_avg[income_year_avg['region'].isin(['Sub-Saharan Africa', 'South Asia'])]
+display(income_top2)
+display(income_bot2)
+
+# tax revenue data
+tax_rev = regional_avg[regional_avg['series_name'].str.contains('Tax')]
+tax_melt = tax_rev.melt(id_vars=['region', 'series_name'], var_name='year', value_name='value')
+tax_melt['year'] = tax_melt['year'].str.replace('avg_', '').astype(int)
+tax_rev_avg = tax_melt.groupby(['year', 'region'])['value'].mean().reset_index()
+tax_top2 = tax_rev_avg[tax_rev_avg['region'].isin(['Europe & Central Asia', 'North America'])]
+tax_bot2 = tax_rev_avg[tax_rev_avg['region'].isin(['Sub-Saharan Africa', 'South Asia'])]
+display(tax_top2)
+display(tax_bot2)
+
+#employment data
+employment = regional_avg[regional_avg['series_name'].str.contains('Employment')]
+em_melt = employment.melt(id_vars=['region', 'series_name'], var_name='year', value_name='value')
+em_melt['year'] = em_melt['year'].str.replace('avg_', '').astype(int)
+employment_avg = em_melt.groupby(['year', 'region'])['value'].mean().reset_index()
+employment_top2 = employment_avg[employment_avg['region'].isin(['Europe & Central Asia', 'North America'])]
+employment_bot2 = employment_avg[employment_avg['region'].isin(['Sub-Saharan Africa', 'South Asia'])]
+display(employment_top2)
+display(employment_bot2)
+```
+
+# Adjusted Net National Income per Capita (annual % growth) from 2004-2023
+```{python}
+#| echo: false
+fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(18, 6))
+
+# Plot for income_top2
+for region in income_top2['region'].unique():
+    region_data = income_top2[income_top2['region'] == region]
+    axes[0].plot(region_data['year'], region_data['value'], label=region)
+axes[0].set_xlabel('Year')
+axes[0].set_xticks(region_data['year'])
+axes[0].set_ylabel('Adjusted Net National Income per Capita (annual % growth)')
+axes[0].legend(title='Region', loc='upper right')
+axes[0].grid(True)
+axes[0].set_title('Top 2 Regions')
+
+# Plot for income_bot2
+for region in income_bot2['region'].unique():
+    region_data = income_bot2[income_bot2['region'] == region]
+    axes[1].plot(region_data['year'], region_data['value'], label=region)
+axes[1].set_xlabel('Year')
+axes[1].set_xticks(region_data['year'])
+axes[1].set_ylabel('Adjusted Net National Income per Capita (annual % growth)')
+axes[1].legend(title='Region', loc='upper right')
+axes[1].grid(True)
+axes[1].set_title('Bottom 2 Regions')
+
+for ax in axes:
+    for label in ax.get_xticklabels():
+        label.set_rotation(45)
+
+plt.tight_layout()
+plt.show()
+```
+
+# Interpretation
+The graphs show the trends in Adjusted Net National Income per Capita for the top-performing regions and the bottom-performing regions. Europe & Central Asia consistently shows higher growth rates compared to North America, indicating strong income growth dynamics in this region during the observed period. Sub-Saharan Africa and South Asia demonstrate slower progress compared to the top-performing regions.
+
+# Tax Revenue (% of GDP) from 2004-2023
+```{python}
+fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(18, 6))
+
+# Plot for tax_top2
+for region in tax_top2['region'].unique():
+    region_data = tax_top2[tax_top2['region'] == region]
+    axes[0].plot(region_data['year'], region_data['value'], label=region)
+axes[0].set_xlabel('Year')
+axes[0].set_xticks(region_data['year'])
+axes[0].set_ylabel('Tax Revenue (% of GDP)')
+axes[0].set_ylim(0, 26)
+axes[0].legend(title='Region', loc='upper right')
+axes[0].grid(True)
+axes[0].set_title('Top 2 Regions')
+
+# Plot for tax_bot2
+for region in tax_bot2['region'].unique():
+    region_data = tax_bot2[tax_bot2['region'] == region]
+    axes[1].plot(region_data['year'], region_data['value'], label=region)
+axes[1].set_xlabel('Year')
+axes[1].set_xticks(region_data['year'])
+axes[1].set_ylabel('Tax Revenue (% of GDP)')
+axes[1].set_ylim(0, 26)
+axes[1].legend(title='Region', loc='upper right')
+axes[1].grid(True)
+axes[1].set_title('Bottom 2 Regions')
+
+for ax in axes:
+    for label in ax.get_xticklabels():
+        label.set_rotation(45)
+
+plt.tight_layout()
+plt.show()
+```
+
+# Interpretation
+The graphs compare the trends in Tax Revenue as a percentage of GDP. Europe & Central Asia and North America demonstrate more consistent revenue percentages, indicating that these regions have a greater reliance on taxation or they have a stronger fiscal capacity. Sub-Saharan Africa and South Asia show greater disparities over time which could suggest issues with tax collection or reliance on alternative revenue sources.
+
+# Employment to Population Ratio, 15+, total % (national estimate) from 2004-2023
+```{python}
+fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(18, 6))
+
+# Plot for employment_top2
+for region in employment_top2['region'].unique():
+    region_data = employment_top2[employment_top2['region'] == region]
+    axes[0].plot(region_data['year'], region_data['value'], label=region)
+axes[0].set_xlabel('Year')
+axes[0].set_xticks(region_data['year'])
+axes[0].set_ylabel('Employment to Population Ratio (%)')
+axes[0].set_ylim(40, 67)
+axes[0].legend(title='Region', loc='upper right')
+axes[0].grid(True)
+axes[0].set_title('Top 2 Regions')
+
+# Plot for employment_bot2
+for region in employment_bot2['region'].unique():
+    region_data = employment_bot2[employment_bot2['region'] == region]
+    axes[1].plot(region_data['year'], region_data['value'], label=region)
+axes[1].set_xlabel('Year')
+axes[1].set_xticks(region_data['year'])
+axes[1].set_ylabel('Employment to Population Ratio (%)')
+axes[1].set_ylim(40, 67)
+axes[1].legend(title='Region', loc='upper right')
+axes[1].grid(True)
+axes[1].set_title('Bottom 2 Regions')
+
+for ax in axes:
+    for label in ax.get_xticklabels():
+        label.set_rotation(45)
+
+plt.tight_layout()
+plt.show()
+```
+
+# Interpretation
+The graphs show the trends in the Employment to Population Ratio for the top performing regions and the bottom performing regions. The employment-to-population ratio for North America and Europe & Central Asia are more generally more consistent than in Sub-Saharan Africa and South Asia. The fluctuations in the bottom 2 regions indicates challenges in sustaing employment levels relative to the population over time. 
 
 ```{python}
 #| echo: false
@@ -147,43 +342,3 @@ bottom_model = fit_regression(bottom_regions, "Bottom")
 
 ## Interpretation
 For bottom regions, only tax revenue significantly predicts GDP per capita, with a positive effect. The model explains 33.6% of the variation, as other variables (adjusted income growth and employment ratio) were excluded due to insignificance (p > 0.05).
-
-
-## Choosing Top & Bottom Regions
-
-```{python}
-indicators = [
-    "GDP per capita (constant 2015 US$)",
-    'Adjusted net national income per capita (annual % growth)',
-    "Employment to population ratio, 15+, total (%) (national estimate)",
-    'Tax revenue (% of GDP)'
-]
-filtered_data = data[data['series_name'].isin(indicators)]
-
-long_data = filtered_data.melt(
-    id_vars=["country_name", "country_code", "series_name", "region"],
-    var_name="year",
-    value_name="value")
-
-long_data['year'] = long_data['year'].str.extract('(\d+)').astype(int)
-
-# Calculate regional means for the latest available year
-latest_year = long_data['year'].max() - 1
-regional_means = (
-    long_data[long_data['year'] == latest_year]
-    .groupby(['region', 'series_name'])['value']
-    .mean()
-    .unstack()
-)
-
-# Plot Regional GDP Per Capita for the Latest Year
-plt.figure(figsize=(10, 6))
-regional_means['GDP per capita (constant 2015 US$)'].sort_values().plot(kind='barh')
-plt.title(f'Regional GDP per Capita ({latest_year})')
-plt.xlabel('GDP per Capita (constant 2015 US$)')
-plt.ylabel('Region')
-plt.tight_layout()
-plt.savefig('regional_gdp_per_capita.png')
-plt.show()
-
-```

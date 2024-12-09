@@ -1,5 +1,5 @@
 ---
-title: Results
+title: Results and Discussion
 output:
     pdf: 
         template: article-template.latex
