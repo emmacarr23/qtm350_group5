@@ -1,0 +1,12 @@
+---
+title: Introduction
+output:
+    pdf: 
+        template: article-template.latex
+---
+
+It is well-known that there is wide discrepancy in the economic standing of the various regions across our globe. Numerous factors contribute to these differences, such as technological innovation and globalization on the global-scale, as well as more country-specific characteristics like economic stability and domestic policies (e.g., fiscal policies, regulation of labor and product markets) [(source)](https://www.imf.org/en/Topics/Inequality/introduction-to-inequality#:~:text=Global%20factors%2C%20such%20as%20technological,Card%20and%20DiNardo%2C%202002). While the combination of these factors explains much of the variance observed in the real-world, less is known of the relative importance of individuals factors in explaining the total variability observed in global economic differences. And that is what we would like to explore. 
+
+In our research, we aim to identify the economic indicators that play the most significant roles in explaining variation seen in global regions' economic standings, which we detemined by comparing each region's GDP per capita. Specifically, we will be examining the highest-performing regions, North America and Europe, and the lowest-performing regions, Sub-Saharan Africa and North Asia. By examining these highly contrasting cases, we hope to pinpoint the most influential drivers of GDP per capita within and across these groups, regional economic disparity.
+
+The group of indicators we chose to examine includes adjusted income growth, employment to GDP ratio, and tax revenue to GDP ratio. These indicators provided the most comprehensive dataset for our regions, with few missing observations. 
