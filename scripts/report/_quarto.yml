@@ -1,0 +1,7 @@
+project:
+  title: "report"
+format:
+  pdf:
+    template: article-template.latex
+
+
