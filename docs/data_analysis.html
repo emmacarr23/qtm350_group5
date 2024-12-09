@@ -165,7 +165,7 @@ ul.task-list li input[type="checkbox"] {
 <p>This analysis investigates regional differences across various indicators using cleaned datasets. The goal is to uncover trends and disparities to inform data-driven conclusions.</p>
 <section id="choosing-top-bottom-regions" class="level2">
 <h2 class="anchored" data-anchor-id="choosing-top-bottom-regions">Choosing Top &amp; Bottom Regions</h2>
-<div id="ba5bc9a5" class="cell" data-execution_count="1">
+<div id="8e181f9e" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -180,7 +180,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="adjusted-net-national-income-per-capita-annual-growth-from-2004-2023" class="level1">
 <h1>Adjusted Net National Income per Capita (annual % growth) from 2004-2023</h1>
-<div id="17893a26" class="cell" data-execution_count="3">
+<div id="186fc618" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -199,7 +199,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="tax-revenue-of-gdp-from-2004-2023" class="level1">
 <h1>Tax Revenue (% of GDP) from 2004-2023</h1>
-<div id="ddf9bcbb" class="cell" data-execution_count="4">
+<div id="b186689d" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -218,7 +218,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="employment-to-population-ratio-15-total-national-estimate-from-2004-2023" class="level1">
 <h1>Employment to Population Ratio, 15+, total % (national estimate) from 2004-2023</h1>
-<div id="e9a1a11c" class="cell" data-execution_count="5">
+<div id="b08f23ef" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -234,7 +234,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="interpretation-2" class="level1">
 <h1>Interpretation</h1>
 <p>The graphs show the trends in the Employment to Population Ratio for the top performing regions and the bottom performing regions. The employment-to-population ratio for North America and Europe &amp; Central Asia are more generally more consistent than in Sub-Saharan Africa and South Asia. The fluctuations in the bottom 2 regions indicates challenges in sustaing employment levels relative to the population over time.</p>
-<div id="f49bbcdd" class="cell" data-execution_count="6">
+<div id="5e48d05f" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -249,7 +249,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="regression-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="regression-analysis">Regression Analysis</h2>
-<div id="74dc83a4" class="cell" data-execution_count="7">
+<div id="b0dc5b64" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Final Regression Summary for Top Regions
@@ -259,7 +259,7 @@ Dep. Variable:         GDP_per_capita   R-squared:                       0.217
 Model:                            OLS   Adj. R-squared:                  0.214
 Method:                 Least Squares   F-statistic:                     66.84
 Date:                Mon, 09 Dec 2024   Prob (F-statistic):           3.73e-38
-Time:                        18:43:12   Log-Likelihood:                -8283.3
+Time:                        18:52:29   Log-Likelihood:                -8283.3
 No. Observations:                 727   AIC:                         1.657e+04
 Df Residuals:                     723   BIC:                         1.659e+04
 Df Model:                           3                                         
@@ -286,7 +286,7 @@ Notes:
 <section id="interpretation-4" class="level2">
 <h2 class="anchored" data-anchor-id="interpretation-4">Interpretation</h2>
 <p>For top regions, GDP per capita is positively influenced by employment ratio and tax revenue, while adjusted income growth has a negative impact. The model explains 21.7% of the variation in GDP per capita, with all predictors statistically significant (p &lt; 0.05).</p>
-<div id="488a6e76" class="cell" data-execution_count="8">
+<div id="f470524e" class="cell" data-execution_count="8">
 <div class="cell-output cell-output-stdout">
 <pre><code>Dropping variable 'Adjusted_income_growth' with p-value 0.5781723503520071
 Dropping variable 'Employment_ratio' with p-value 0.43572331591362223
@@ -298,7 +298,7 @@ Dep. Variable:         GDP_per_capita   R-squared:                       0.336
 Model:                            OLS   Adj. R-squared:                  0.332
 Method:                 Least Squares   F-statistic:                     89.43
 Date:                Mon, 09 Dec 2024   Prob (F-statistic):           1.96e-17
-Time:                        18:43:12   Log-Likelihood:                -1695.3
+Time:                        18:52:29   Log-Likelihood:                -1695.3
 No. Observations:                 179   AIC:                             3395.
 Df Residuals:                     177   BIC:                             3401.
 Df Model:                           1                                         
