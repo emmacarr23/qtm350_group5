@@ -1,0 +1,53 @@
+---
+title: Introduction
+output:
+    pdf: 
+        template: article-template.latex
+---
+
+It is well-known that there is wide discrepancy in the economic standing of the various regions across our globe. Numerous factors contribute to these differences, such as technological innovation and globalization on the global-scale, as well as more country-specific characteristics like economic stability and domestic policies (e.g., fiscal policies, regulation of labor and product markets) [(source)](https://www.imf.org/en/Topics/Inequality/introduction-to-inequality#:~:text=Global%20factors%2C%20such%20as%20technological,Card%20and%20DiNardo%2C%202002). While the combination of these factors explains much of the variance observed in the real-world, less is known of the relative importance of individuals factors in explaining the total variability observed in global economic differences. And that is what we would like to explore. 
+
+In our research, we aim to identify the economic indicators that play the most significant roles in explaining variation seen in global regions' economic standings, which we detemined by comparing each region's GDP per capita. Specifically, we will be examining the highest-performing regions, North America and Europe & Central Asia, and the lowest-performing regions, Sub-Saharan Africa and South Asia. We determined regional rankings through preliminary analysis (@fig-global_gdp_comparisons). By examining these highly contrasting cases, we hope to pinpoint the most influential drivers of GDP per capita within and across these groups, regional economic disparity.
+
+```{python}
+#| echo: false
+import pandas as pd
+import matplotlib.pyplot as plt
+data = pd.read_csv('../../data/cleaned_data.csv')
+indicators = [
+    "GDP per capita (constant 2015 US$)",
+    'Adjusted net national income per capita (annual % growth)',
+    "Employment to population ratio, 15+, total (%) (national estimate)",
+    'Tax revenue (% of GDP)'
+]
+filtered_data = data[data['series_name'].isin(indicators)]
+
+long_data = filtered_data.melt(
+    id_vars=["country_name", "country_code", "series_name", "region"],
+    var_name="year",
+    value_name="value")
+
+long_data['year'] = long_data['year'].str.extract('(\d+)').astype(int)
+
+# Calculate regional means for the latest available year
+latest_year = long_data['year'].max() - 1
+regional_means = (
+    long_data[long_data['year'] == latest_year]
+    .groupby(['region', 'series_name'])['value']
+    .mean()
+    .unstack()
+)
+
+# Plot Regional GDP Per Capita for the Latest Year
+plt.figure(figsize=(10, 6))
+regional_means['GDP per capita (constant 2015 US$)'].sort_values().plot(kind='barh')
+plt.title(f'Regional GDP per Capita ({latest_year})')
+plt.xlabel('GDP per Capita (constant 2015 US$)')
+plt.ylabel('Region')
+plt.tight_layout()
+plt.savefig('regional_gdp_per_capita.png')
+plt.show()
+
+```
+
+Our analysis examines the relationships between GDP per capita and three core indicators: adjusted income growth, employment to GDP ratio, and tax revenue to GDP ratio. Using linear regression models, we identify the magnitude and direction of these associations, as well as determine each indicator's signficance in predicting each region's GDP per capita. 

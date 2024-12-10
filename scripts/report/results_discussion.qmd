@@ -1,12 +1,12 @@
 ---
-title: "Regression Analysis of Indicators"
+title: Results and Discussion
+output:
+    pdf: default
 ---
 
-## Introduction
+We examined the association between seelected economic indicators and GDP per capita, stratified by region (@fig-associations). In higher performing regions (North America and Europe & Central Asia), the strongest association was seen across GDP and emoployment ratio. On the contrary, association was weakest when comparing ajusted income growth, with little variation in the growth rate across varying levels of GDP. 
 
-This analysis investigates regional differences across various indicators using cleaned datasets. The goal is to uncover trends and disparities to inform data-driven conclusions.
-
-## Data Analysis
+Examining the lowest performing regions (Sub-Saharan Africa and South Asia), the strongest association was seen between tax revenue and GDP per capita. Both adjusted income growth and employment had weaker associations, with wide variability across points. 
 
 ```{python}
 #| echo: false
@@ -97,11 +97,15 @@ plt.savefig("predictors_vs_gdp_with_regression_lines.png")
 plt.show()
 ```
 
-## Interpretation
+To further quantify these relationships, we conducted a linear regression analysis using the following model: 
 
-From the scatterplots, we observe that in top regions, GDP per capita shows a strong positive association with the employment-to-population ratio and a weaker but still positive relationship with tax revenue. In contrast, bottom regions exhibit weaker or negative associations for adjusted income growth and employment ratios, while tax revenue appears positively correlated with GDP per capita, indicating its importance in these regions. These patterns highlight differing drivers of economic performance across regions.
+GDP_per_capita = adjusted income growth + employment ratio + tax revenue
 
-## Regression Analysis
+In the higher performing regions, income growth had a negative impact, with an increase in adjusted income growth was associated with a $814.83 decrease in GDP per capita. Employment ratio and tax revenue had a positive association, with a one unit increase leading to a $1160.32 and $859.32 increase in GDP per capita, respecitvely. All indicators were significant, with p-values less than 0.01 (@fig-regression_high). 
+
+Examining the lower performing regions, our model focused on just the impact of tax revenue, as income growth and employment ratio were insignificant predictors at significance level = 0.05. Tax revenue demonstrated a positive impact on GDP per capita, with a one unit increase leading to $323.41 increase in GDP per capita. Tax revenue was the only significant indicator for these regions at significance level = 0.05, further highlighting the weaker associations observed amongst employment and income growth in the graphs(@fig-regression_low). 
+
+Interestly enough, the model for lower-performing regions better explained the variability seen in GDP when compared to the higher-performing region, as seen by the higher adjusted R-squared of 0.33 (compared to that of higher regions = 0.214). 
 
 ```{python}
 #| echo: false
@@ -137,53 +141,7 @@ def fit_regression(data, region_group):
 top_model = fit_regression(top_regions, "Top")
 ```
 
-## Interpretation
-For top regions, GDP per capita is positively influenced by employment ratio and tax revenue, while adjusted income growth has a negative impact. The model explains 21.7% of the variation in GDP per capita, with all predictors statistically significant (p < 0.05).
-
 ```{python}
 #| echo: false
 bottom_model = fit_regression(bottom_regions, "Bottom")
-```
-
-## Interpretation
-For bottom regions, only tax revenue significantly predicts GDP per capita, with a positive effect. The model explains 33.6% of the variation, as other variables (adjusted income growth and employment ratio) were excluded due to insignificance (p > 0.05).
-
-
-## Choosing Top & Bottom Regions
-
-```{python}
-indicators = [
-    "GDP per capita (constant 2015 US$)",
-    'Adjusted net national income per capita (annual % growth)',
-    "Employment to population ratio, 15+, total (%) (national estimate)",
-    'Tax revenue (% of GDP)'
-]
-filtered_data = data[data['series_name'].isin(indicators)]
-
-long_data = filtered_data.melt(
-    id_vars=["country_name", "country_code", "series_name", "region"],
-    var_name="year",
-    value_name="value")
-
-long_data['year'] = long_data['year'].str.extract('(\d+)').astype(int)
-
-# Calculate regional means for the latest available year
-latest_year = long_data['year'].max() - 1
-regional_means = (
-    long_data[long_data['year'] == latest_year]
-    .groupby(['region', 'series_name'])['value']
-    .mean()
-    .unstack()
-)
-
-# Plot Regional GDP Per Capita for the Latest Year
-plt.figure(figsize=(10, 6))
-regional_means['GDP per capita (constant 2015 US$)'].sort_values().plot(kind='barh')
-plt.title(f'Regional GDP per Capita ({latest_year})')
-plt.xlabel('GDP per Capita (constant 2015 US$)')
-plt.ylabel('Region')
-plt.tight_layout()
-plt.savefig('regional_gdp_per_capita.png')
-plt.show()
-
 ```

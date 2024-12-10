@@ -1,0 +1,343 @@
+---
+title: "Analysis of Indicators"
+---
+
+This analysis investigates regional differences across various indicators using cleaned datasets. The goal is to uncover trends and disparities to inform data-driven conclusions.
+
+## Choosing Top & Bottom Regions
+
+```{python}
+#| echo: false
+import pandas as pd
+import matplotlib.pyplot as plt
+data = pd.read_csv('../../data/cleaned_data.csv')
+indicators = [
+    "GDP per capita (constant 2015 US$)",
+    'Adjusted net national income per capita (annual % growth)',
+    "Employment to population ratio, 15+, total (%) (national estimate)",
+    'Tax revenue (% of GDP)'
+]
+filtered_data = data[data['series_name'].isin(indicators)]
+
+long_data = filtered_data.melt(
+    id_vars=["country_name", "country_code", "series_name", "region"],
+    var_name="year",
+    value_name="value")
+
+long_data['year'] = long_data['year'].str.extract('(\d+)').astype(int)
+
+# Calculate regional means for the latest available year
+latest_year = long_data['year'].max() - 1
+regional_means = (
+    long_data[long_data['year'] == latest_year]
+    .groupby(['region', 'series_name'])['value']
+    .mean()
+    .unstack()
+)
+
+# Plot Regional GDP Per Capita for the Latest Year
+plt.figure(figsize=(10, 6))
+regional_means['GDP per capita (constant 2015 US$)'].sort_values().plot(kind='barh')
+plt.title(f'Regional GDP per Capita ({latest_year})')
+plt.xlabel('GDP per Capita (constant 2015 US$)')
+plt.ylabel('Region')
+plt.tight_layout()
+plt.savefig('regional_gdp_per_capita.png')
+plt.show()
+
+```
+
+## Data Analysis & Visualizations
+```{python}
+#| echo: false
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+
+regional_avg = pd.read_csv('../../data/regional_avg.csv')
+
+# national income data
+nat_income = regional_avg[regional_avg['series_name'].str.contains('Adjusted net')]
+income_melt = nat_income.melt(id_vars=['region', 'series_name'], var_name='year', value_name='value')
+income_melt['year'] = income_melt['year'].str.replace('avg_', '').astype(int)
+income_year_avg = income_melt.groupby(['year', 'region'])['value'].mean().reset_index()
+income_top2 = income_year_avg[income_year_avg['region'].isin(['Europe & Central Asia', 'North America'])]
+income_bot2 = income_year_avg[income_year_avg['region'].isin(['Sub-Saharan Africa', 'South Asia'])]
+
+# tax revenue data
+tax_rev = regional_avg[regional_avg['series_name'].str.contains('Tax')]
+tax_melt = tax_rev.melt(id_vars=['region', 'series_name'], var_name='year', value_name='value')
+tax_melt['year'] = tax_melt['year'].str.replace('avg_', '').astype(int)
+tax_rev_avg = tax_melt.groupby(['year', 'region'])['value'].mean().reset_index()
+tax_top2 = tax_rev_avg[tax_rev_avg['region'].isin(['Europe & Central Asia', 'North America'])]
+tax_bot2 = tax_rev_avg[tax_rev_avg['region'].isin(['Sub-Saharan Africa', 'South Asia'])]
+
+#employment data
+employment = regional_avg[regional_avg['series_name'].str.contains('Employment')]
+em_melt = employment.melt(id_vars=['region', 'series_name'], var_name='year', value_name='value')
+em_melt['year'] = em_melt['year'].str.replace('avg_', '').astype(int)
+employment_avg = em_melt.groupby(['year', 'region'])['value'].mean().reset_index()
+employment_top2 = employment_avg[employment_avg['region'].isin(['Europe & Central Asia', 'North America'])]
+employment_bot2 = employment_avg[employment_avg['region'].isin(['Sub-Saharan Africa', 'South Asia'])]
+```
+
+# Adjusted Net National Income per Capita (annual % growth) from 2004-2023
+```{python}
+#| echo: false
+fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(18, 6))
+
+# Plot for income_top2
+for region in income_top2['region'].unique():
+    region_data = income_top2[income_top2['region'] == region]
+    axes[0].plot(region_data['year'], region_data['value'], label=region)
+axes[0].set_xlabel('Year')
+axes[0].set_xticks(region_data['year'])
+axes[0].set_ylabel('Adjusted Net National Income per Capita (annual % growth)')
+axes[0].legend(title='Region', loc='upper right')
+axes[0].grid(True)
+axes[0].set_title('Top 2 Regions')
+
+# Plot for income_bot2
+for region in income_bot2['region'].unique():
+    region_data = income_bot2[income_bot2['region'] == region]
+    axes[1].plot(region_data['year'], region_data['value'], label=region)
+axes[1].set_xlabel('Year')
+axes[1].set_xticks(region_data['year'])
+axes[1].set_ylabel('Adjusted Net National Income per Capita (annual % growth)')
+axes[1].legend(title='Region', loc='upper right')
+axes[1].grid(True)
+axes[1].set_title('Bottom 2 Regions')
+
+for ax in axes:
+    for label in ax.get_xticklabels():
+        label.set_rotation(45)
+
+plt.tight_layout()
+plt.show()
+plt.savefig('../../figures/nat_income.png', format='png')
+```
+
+# Interpretation
+The graphs show the trends in Adjusted Net National Income per Capita for the top-performing regions and the bottom-performing regions. Europe & Central Asia consistently shows higher growth rates compared to North America, indicating strong income growth dynamics in this region during the observed period. Sub-Saharan Africa and South Asia demonstrate slower progress compared to the top-performing regions.
+
+# Tax Revenue (% of GDP) from 2004-2023
+```{python}
+#| echo: false
+fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(18, 6))
+
+# Plot for tax_top2
+for region in tax_top2['region'].unique():
+    region_data = tax_top2[tax_top2['region'] == region]
+    axes[0].plot(region_data['year'], region_data['value'], label=region)
+axes[0].set_xlabel('Year')
+axes[0].set_xticks(region_data['year'])
+axes[0].set_ylabel('Tax Revenue (% of GDP)')
+axes[0].set_ylim(0, 26)
+axes[0].legend(title='Region', loc='upper right')
+axes[0].grid(True)
+axes[0].set_title('Top 2 Regions')
+
+# Plot for tax_bot2
+for region in tax_bot2['region'].unique():
+    region_data = tax_bot2[tax_bot2['region'] == region]
+    axes[1].plot(region_data['year'], region_data['value'], label=region)
+axes[1].set_xlabel('Year')
+axes[1].set_xticks(region_data['year'])
+axes[1].set_ylabel('Tax Revenue (% of GDP)')
+axes[1].set_ylim(0, 26)
+axes[1].legend(title='Region', loc='upper right')
+axes[1].grid(True)
+axes[1].set_title('Bottom 2 Regions')
+
+for ax in axes:
+    for label in ax.get_xticklabels():
+        label.set_rotation(45)
+
+plt.tight_layout()
+plt.show()
+plt.savefig('../../figures/tax_rev.png', format='png')
+```
+
+# Interpretation
+The graphs compare the trends in Tax Revenue as a percentage of GDP. Europe & Central Asia and North America demonstrate more consistent revenue percentages, indicating that these regions have a greater reliance on taxation or they have a stronger fiscal capacity. Sub-Saharan Africa and South Asia show greater disparities over time which could suggest issues with tax collection or reliance on alternative revenue sources.
+
+# Employment to Population Ratio, 15+, total % (national estimate) from 2004-2023
+```{python}
+#| echo: false
+fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(18, 6))
+
+# Plot for employment_top2
+for region in employment_top2['region'].unique():
+    region_data = employment_top2[employment_top2['region'] == region]
+    axes[0].plot(region_data['year'], region_data['value'], label=region)
+axes[0].set_xlabel('Year')
+axes[0].set_xticks(region_data['year'])
+axes[0].set_ylabel('Employment to Population Ratio (%)')
+axes[0].set_ylim(40, 67)
+axes[0].legend(title='Region', loc='upper right')
+axes[0].grid(True)
+axes[0].set_title('Top 2 Regions')
+
+# Plot for employment_bot2
+for region in employment_bot2['region'].unique():
+    region_data = employment_bot2[employment_bot2['region'] == region]
+    axes[1].plot(region_data['year'], region_data['value'], label=region)
+axes[1].set_xlabel('Year')
+axes[1].set_xticks(region_data['year'])
+axes[1].set_ylabel('Employment to Population Ratio (%)')
+axes[1].set_ylim(40, 67)
+axes[1].legend(title='Region', loc='upper right')
+axes[1].grid(True)
+axes[1].set_title('Bottom 2 Regions')
+
+for ax in axes:
+    for label in ax.get_xticklabels():
+        label.set_rotation(45)
+
+plt.tight_layout()
+plt.show()
+plt.savefig('../../figures/employment.png', format='png')
+```
+
+# Interpretation
+The graphs show the trends in the Employment to Population Ratio for the top performing regions and the bottom performing regions. The employment-to-population ratio for North America and Europe & Central Asia are more generally more consistent than in Sub-Saharan Africa and South Asia. The fluctuations in the bottom 2 regions indicates challenges in sustaing employment levels relative to the population over time. 
+
+```{python}
+#| echo: false
+# Import necessary libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+
+# Load the datasets
+data = pd.read_csv('../../data/cleaned_data.csv')
+
+# Choosing relevant indicators and filtering data
+indicators = [
+    "GDP per capita (constant 2015 US$)",
+    "Adjusted net national income per capita (annual % growth)",
+    "Employment to population ratio, 15+, total (%) (national estimate)",
+    "Tax revenue (% of GDP)"
+]
+regions_of_interest = ['North America', 'Europe & Central Asia', 'South Asia', 'Sub-Saharan Africa']
+
+# Filter the data for selected indicators and regions
+filtered_data = data[
+    (data['series_name'].isin(indicators)) & 
+    (data['region'].isin(regions_of_interest))
+]
+
+# Reshape the dataset to long format
+long_data = filtered_data.melt(
+    id_vars=["country_name", "country_code", "series_name", "region"],
+    var_name="year",
+    value_name="value"
+)
+long_data['year'] = long_data['year'].str.extract('(\d+)').astype(int)
+
+# Pivot to wide format to get all indicators as columns
+wide_data = long_data.pivot_table(
+    index=["country_name", "region", "year"], 
+    columns="series_name", 
+    values="value"
+).reset_index()
+
+wide_data.columns = [
+    "country_name", "region", "year", 
+    "Adjusted_income_growth", "Employment_ratio", 
+    "GDP_per_capita", "Tax_revenue"
+]
+
+# Filter for rows with complete data
+wide_data = wide_data.dropna()
+
+# Separate top and bottom regions
+top_regions = wide_data[wide_data['region'].isin(['North America', 'Europe & Central Asia'])]
+bottom_regions = wide_data[wide_data['region'].isin(['South Asia', 'Sub-Saharan Africa'])]
+
+# Visualize relationships with regression lines
+fig, axes = plt.subplots(3, 2, figsize=(15, 12))
+predictors = ["Adjusted_income_growth", "Employment_ratio", "Tax_revenue"]
+titles = ["Adjusted Income Growth", "Employment Ratio", "Tax Revenue"]
+
+for i, predictor in enumerate(predictors):
+    # Top regions
+    axes[i, 0].scatter(top_regions[predictor], top_regions["GDP_per_capita"], alpha=0.7, label='Data Points')
+    # Fit regression line for top regions
+    X_top = sm.add_constant(top_regions[predictor])  # Add constant for regression
+    model_top = sm.OLS(top_regions["GDP_per_capita"], X_top).fit()
+    regression_line_top = model_top.predict(X_top)
+    axes[i, 0].plot(top_regions[predictor], regression_line_top, color='red', label='Regression Line')
+    axes[i, 0].set_title(f"Top Regions: {titles[i]} vs. GDP per Capita")
+    axes[i, 0].set_xlabel(titles[i])
+    axes[i, 0].set_ylabel("GDP per Capita")
+    axes[i, 0].legend()
+    
+    # Bottom regions
+    axes[i, 1].scatter(bottom_regions[predictor], bottom_regions["GDP_per_capita"], alpha=0.7, label='Data Points')
+    # Fit regression line for bottom regions
+    X_bottom = sm.add_constant(bottom_regions[predictor])  # Add constant for regression
+    model_bottom = sm.OLS(bottom_regions["GDP_per_capita"], X_bottom).fit()
+    regression_line_bottom = model_bottom.predict(X_bottom)
+    axes[i, 1].plot(bottom_regions[predictor], regression_line_bottom, color='red', label='Regression Line')
+    axes[i, 1].set_title(f"Bottom Regions: {titles[i]} vs. GDP per Capita")
+    axes[i, 1].set_xlabel(titles[i])
+    axes[i, 1].set_ylabel("GDP per Capita")
+    axes[i, 1].legend()
+
+plt.tight_layout()
+plt.savefig("predictors_vs_gdp_with_regression_lines.png")
+plt.show()
+```
+
+## Interpretation
+
+From the scatterplots, we observe that in top regions, GDP per capita shows a strong positive association with the employment-to-population ratio and a weaker but still positive relationship with tax revenue. In contrast, bottom regions exhibit weaker or negative associations for adjusted income growth and employment ratios, while tax revenue appears positively correlated with GDP per capita, indicating its importance in these regions. These patterns highlight differing drivers of economic performance across regions.
+
+## Regression Analysis
+
+```{python}
+#| echo: false
+def fit_regression(data, region_group):
+    # Define the initial set of predictors
+    predictors = ["Adjusted_income_growth", "Employment_ratio", "Tax_revenue"]
+    y = data["GDP_per_capita"]
+    
+    # Iteratively fit the model and drop insignificant variables
+    while True:
+        X = data[predictors]
+        X = sm.add_constant(X)  # Add a constant for the intercept
+        model = sm.OLS(y, X).fit()
+        
+        # Get p-values and check for the highest p-value
+        p_values = model.pvalues.drop("const")  # Exclude the constant
+        max_p_value = p_values.max()
+        max_p_variable = p_values.idxmax()
+        
+        # If all p-values are <= 0.05, stop dropping variables
+        if max_p_value <= 0.05:
+            break
+        
+        # Drop the variable with the highest p-value
+        print(f"Dropping variable '{max_p_variable}' with p-value {max_p_value}")
+        predictors.remove(max_p_variable)
+    
+    # Final model summary
+    print(f"\nFinal Regression Summary for {region_group} Regions")
+    print(model.summary())
+    return model
+
+top_model = fit_regression(top_regions, "Top")
+```
+
+## Interpretation
+For top regions, GDP per capita is positively influenced by employment ratio and tax revenue, while adjusted income growth has a negative impact. The model explains 21.7% of the variation in GDP per capita, with all predictors statistically significant (p < 0.05).
+
+```{python}
+#| echo: false
+bottom_model = fit_regression(bottom_regions, "Bottom")
+```
+
+## Interpretation
+For bottom regions, only tax revenue significantly predicts GDP per capita, with a positive effect. The model explains 33.6% of the variation, as other variables (adjusted income growth and employment ratio) were excluded due to insignificance (p > 0.05).
