@@ -84,7 +84,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./title.html"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
@@ -143,9 +143,9 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>We examined the association between seelected economic indicators and GDP per capita, stratified by region (<strong>?@fig-associations</strong>). In higher performing regions (North America and Europe &amp; Central Asia), the strongest association was seen across GDP and emoployment ratio. On the contrary, association was weakest when comparing ajusted income growth, with little variation in the growth rate across varying levels of GDP.</p>
+<p>We examined the association between seelected economic indicators and GDP per capita, stratified by region. In higher performing regions (North America and Europe &amp; Central Asia), the strongest association was seen across GDP and emoployment ratio. On the contrary, association was weakest when comparing ajusted income growth, with little variation in the growth rate across varying levels of GDP.</p>
 <p>Examining the lowest performing regions (Sub-Saharan Africa and South Asia), the strongest association was seen between tax revenue and GDP per capita. Both adjusted income growth and employment had weaker associations, with wide variability across points.</p>
-<div id="07f6f3fe" class="cell" data-execution_count="1">
+<div id="88913992" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -156,10 +156,10 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p>To further quantify these relationships, we conducted a linear regression analysis using the following model:</p>
 <p>GDP_per_capita = adjusted income growth + employment ratio + tax revenue</p>
-<p>In the higher performing regions, income growth had a negative impact, with an increase in adjusted income growth was associated with a $814.83 decrease in GDP per capita. Employment ratio and tax revenue had a positive association, with a one unit increase leading to a $1160.32 and $859.32 increase in GDP per capita, respecitvely. All indicators were significant, with p-values less than 0.01 (<strong>?@fig-regression_high</strong>).</p>
-<p>Examining the lower performing regions, our model focused on just the impact of tax revenue, as income growth and employment ratio were insignificant predictors at significance level = 0.05. Tax revenue demonstrated a positive impact on GDP per capita, with a one unit increase leading to $323.41 increase in GDP per capita. Tax revenue was the only significant indicator for these regions at significance level = 0.05, further highlighting the weaker associations observed amongst employment and income growth in the graphs(<strong>?@fig-regression_low</strong>).</p>
+<p>In the higher performing regions, income growth had a negative impact, with an increase in adjusted income growth was associated with a $814.83 decrease in GDP per capita. Employment ratio and tax revenue had a positive association, with a one unit increase leading to a $1160.32 and $859.32 increase in GDP per capita, respecitvely. All indicators were significant, with p-values less than 0.01.</p>
+<p>Examining the lower performing regions, our model focused on just the impact of tax revenue, as income growth and employment ratio were insignificant predictors at significance level = 0.05. Tax revenue demonstrated a positive impact on GDP per capita, with a one unit increase leading to $323.41 increase in GDP per capita. Tax revenue was the only significant indicator for these regions at significance level = 0.05, further highlighting the weaker associations observed amongst employment and income growth in the graphs.</p>
 <p>Interestly enough, the model for lower-performing regions better explained the variability seen in GDP when compared to the higher-performing region, as seen by the higher adjusted R-squared of 0.33 (compared to that of higher regions = 0.214).</p>
-<div id="4ed2a372" class="cell" data-execution_count="2">
+<div id="24821be0" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Final Regression Summary for Top Regions
@@ -169,7 +169,7 @@ Dep. Variable:         GDP_per_capita   R-squared:                       0.217
 Model:                            OLS   Adj. R-squared:                  0.214
 Method:                 Least Squares   F-statistic:                     66.84
 Date:                Mon, 09 Dec 2024   Prob (F-statistic):           3.73e-38
-Time:                        18:52:51   Log-Likelihood:                -8283.3
+Time:                        21:24:55   Log-Likelihood:                -8283.3
 No. Observations:                 727   AIC:                         1.657e+04
 Df Residuals:                     723   BIC:                         1.659e+04
 Df Model:                           3                                         
@@ -192,7 +192,7 @@ Notes:
 [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.</code></pre>
 </div>
 </div>
-<div id="c58c97c4" class="cell" data-execution_count="3">
+<div id="c6f5665e" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-stdout">
 <pre><code>Dropping variable 'Adjusted_income_growth' with p-value 0.5781723503520071
 Dropping variable 'Employment_ratio' with p-value 0.43572331591362223
@@ -204,7 +204,7 @@ Dep. Variable:         GDP_per_capita   R-squared:                       0.336
 Model:                            OLS   Adj. R-squared:                  0.332
 Method:                 Least Squares   F-statistic:                     89.43
 Date:                Mon, 09 Dec 2024   Prob (F-statistic):           1.96e-17
-Time:                        18:52:51   Log-Likelihood:                -1695.3
+Time:                        21:24:55   Log-Likelihood:                -1695.3
 No. Observations:                 179   AIC:                             3395.
 Df Residuals:                     177   BIC:                             3401.
 Df Model:                           1                                         
