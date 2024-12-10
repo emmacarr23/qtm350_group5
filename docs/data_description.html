@@ -144,6 +144,8 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>All data was obtained from the World Bank’s <a href="https://databank.worldbank.org/source/world-development-indicators/preview/on">World Development Indicators</a>. This dataset is compiled from a list of officially recognized internation sources on a national, regional, and global scale, across time.</p>
+<p>To merge and clean the dataset, we utilized SQL and SQLAlchemy. From the main dataset, we wanted to create several dataframes. Some of the dataframes are region-based, where countries are grouped into seven geographical regions. Other dataframes are country-based data, where there is information about each individual country in the database. The timeframe used for each indicator is 2004-2023.</p>
+<p>Cleaning the data involved renaming column names to be more readable, replacing entries without values, and ordering the data by the name of the country/region. The cleaning procedure allowed for a more streamlined process for creating visualizations and regressions that informed our conclusions. More details about the data merging and cleaning process can be found in the scripts folder of this GitHub repository.</p>
 <p>The specific variables we examined were as follows:</p>
 <ul>
 <li>GDP per capita (constant 2015 US$): Gross domestic product, the sum of gross value added by all resident producers in the economy plus any product taxes and minus any subsidies not included in the value of the products, divided by midyear population</li>
