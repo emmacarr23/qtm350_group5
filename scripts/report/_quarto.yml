@@ -6,7 +6,7 @@ website:
   navbar:
     left:
       - text: "Home"
-        href: title.qmd
+        href: index.qmd
       - text: "Introduction"
         href: introduction.qmd
       - text: "Data Description"
@@ -20,6 +20,6 @@ website:
 
 format:
   html:
-    theme: flatly
+    theme: cosmo
     css: styles.css
     toc: true

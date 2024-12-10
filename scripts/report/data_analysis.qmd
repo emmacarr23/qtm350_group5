@@ -1,5 +1,8 @@
 ---
 title: "Analysis of Indicators"
+output:
+    pdf: 
+        template: article-template.latex
 ---
 
 This analysis investigates regional differences across various indicators using cleaned datasets. The goal is to uncover trends and disparities to inform data-driven conclusions.
